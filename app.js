@@ -13,10 +13,12 @@ const connectDB = require('./db/connect');
 // App
 const app = express();
 
-// Static front-end asset (Jobster project in JohnSmilgaReact)
+// Express rate limiter (for heroku...)
+app.set('trust proxy', 1);
+
+// Static front-end asset (Jobster project in JohnSmilgaReact) ! NEW !!!
 const path = require('path');
 app.use(express.static(path.resolve(__dirname, '../../JohnSmilgaReact/Redux/jobster-v2/build')));
-
 // Middlewares
 app.use(express.json());
 // Security middlewares
@@ -33,7 +35,7 @@ app.use('/api/v1/auth', authRouter);
 const jobsRouter = require('./routes/jobs');
 const authenticateUser = require('./middleware/authentication');
 app.use('/api/v1/jobs', authenticateUser, jobsRouter);
-// Front-end for all other routes !!!!
+// Front-end for all other routes !!!! ! NEW !!!
 // Serve index.html (in front-end) for all routes
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../../JohnSmilgaReact/Redux/jobster-v2/build', 'index.html'));
@@ -45,7 +47,7 @@ app.use(notFoundMiddleware);
 const errorHandlerMiddleware = require('./middleware/error-handler');
 app.use(errorHandlerMiddleware);
 
-// Port, because whe run React app on port 3000
+// Port, because whe run React app on port 3000 ! NEW !!!
 const port = process.env.PORT || 5000;
 
 // Start / Listen

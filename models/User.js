@@ -8,8 +8,21 @@ const UserSchema = new mongoose.Schema({
 	name:{
 		type:String,
 		required:[true, 'Please provide name'],
+		trim:true,
 		minlength:3,
 		maxlength:50
+	},
+	lastName:{
+		type:String,
+		trim:true,
+		maxlength:30,
+		default:'Your lastname'
+	},
+	location:{
+		type:String,
+		trim:true,
+		maxlength:30,
+		default:'Your city'
 	},
 	email:{
 		type:String,
@@ -25,7 +38,6 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Pre
-// Pre middleware functions are executed one after another, when each middleware calls next.
 UserSchema.pre('save', async function(next){
 	// Salt
 	const salt = await bcrypt.genSalt(10);

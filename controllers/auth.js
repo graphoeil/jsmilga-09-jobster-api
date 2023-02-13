@@ -10,7 +10,13 @@ const register = async(req, res) => {
 	// JWT Token
 	const token = user.createJWT();
 	// Response
-	res.status(StatusCodes.CREATED).json({ user:{ name:user.name }, token });
+	res.status(StatusCodes.CREATED).json({ user:{
+		email:user.email,
+		lastName:user.lastName,
+		location:user.location,
+		name:user.name,
+		token
+	} });
 };
 
 // Login
@@ -33,8 +39,37 @@ const login = async(req, res) => {
 	// JWT Token
 	const token = user.createJWT();
 	// Response
-	res.status(StatusCodes.OK).json({ user:{ name:user.name }, token });
+	res.status(StatusCodes.OK).json({ user:{
+		email:user.email,
+		lastName:user.lastName,
+		location:user.location,
+		name:user.name,
+		token
+	} });
+};
+
+// Update user
+const updateUser = async(req, res) => {
+	const { body:{ email, name, lastName, location }, user:{ userId } } = req;
+	// Check value
+	if (!email || !name || !lastName || !location){
+		throw new BadRequestError('Please provide all values !');
+	}
+	// User
+	const user = await User.findOneAndUpdate({ _id:userId }, {
+		name, lastName, location
+	}, { new:true, runValidators:true });
+	// Generate new token
+	const token = user.createJWT();
+	// Response
+	res.status(StatusCodes.OK).json({ user:{
+		email:user.email,
+		lastName:user.lastName,
+		location:user.location,
+		name:user.name,
+		token
+	} });
 };
 
 // Exports
-module.exports = { register, login };
+module.exports = { register, login, updateUser };

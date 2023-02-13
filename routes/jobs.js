@@ -1,13 +1,15 @@
 // Imports
 const express = require('express');
-const { getAllJobs, getJob, createJob, updateJob, deleteJob } = require('../controllers/jobs');
+const { getAllJobs, getJob, createJob, updateJob, deleteJob, showStats } = require('../controllers/jobs');
+const testUser = require('../middleware/testUser');
 
 // Router
 const jobsRouter = express.Router();
 
 // Routes
-jobsRouter.route('/').post(createJob).get(getAllJobs);
-jobsRouter.route('/:id').get(getJob).patch(updateJob).delete(deleteJob);
+jobsRouter.route('/').post(testUser, createJob).get(getAllJobs);
+jobsRouter.route('/stats').get(showStats);
+jobsRouter.route('/:id').get(getJob).patch(testUser, updateJob).delete(testUser, deleteJob);
 
 // Export
 module.exports = jobsRouter;
